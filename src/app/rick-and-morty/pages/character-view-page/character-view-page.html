@@ -1,0 +1,17 @@
+<nav class="back-nav">
+  <button type="button" (click)="goBack()" class="btn-back">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Back
+  </button>
+</nav>
+
+@if (dataResource.hasValue()) {
+  <app-character-view
+    [data]="dataResource.value()"
+    [moduleRoute]="moduleRoute"
+  ></app-character-view>
+} @else if (dataResource.error(); as error) {
+  <p>{{ error.message }}</p>
+} @else if (dataResource.isLoading()) {
+  <p>Loading...</p>
+}

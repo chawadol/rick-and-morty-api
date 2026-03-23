@@ -1,0 +1,70 @@
+<div class="episode-detail-card">
+  <header class="episode-header">
+    <div class="episode-banner">
+      <img
+        [src]="data().displayImage"
+        [alt]="data().name"
+        class="banner-img"
+        (error)="$any($event.target).src = 'images/episodes/1.jpg'"
+      />
+    </div>
+    <div class="header-content">
+      <h1 class="episode-title">{{ data().name }}</h1>
+      <div class="episode-meta">
+        <span class="air-date"
+          >🗓 First Aired: <b>{{ data().air_date }}</b></span
+        >
+      </div>
+    </div>
+  </header>
+
+  <div class="card-content">
+    <dl class="info-grid">
+      <div class="info-group">
+        <dt>Season | Episode</dt>
+        <dd class="highlight-code">{{ data().episode }}</dd>
+      </div>
+
+      <div class="info-group">
+        <dt>Total Characters</dt>
+        <dd>{{ data().characters.length }} individuals</dd>
+      </div>
+    </dl>
+
+    <section class="characters-section">
+      <h3>👥 Characters in this Episode</h3>
+
+      <div class="character-grid">
+        @for (fieldTree of form.characters; track fieldTree) {
+          @let resource = fieldTree().metadata(characterResourceKey)!;
+
+          <div class="mini-character-card">
+            @if (resource.hasValue()) {
+              @let char = resource.value()!;
+              <a
+                [routerLink]="[
+                  '/rick-and-morty/characters',
+                  resource.value()?.url ?? '' | extractId,
+                ]"
+                [relativeTo]="moduleRoute()"
+                class="char-link"
+              >
+                <img [src]="char.image" [alt]="char.name" class="char-thumb" />
+                <div class="char-info">
+                  <span class="char-name">{{ char.name }}</span>
+                  <span class="char-status" [attr.data-status]="char.status | lowercase">
+                    ● {{ char.status }}
+                  </span>
+                </div>
+              </a>
+            } @else if (resource.isLoading()) {
+              <div class="char-skeleton">Loading multiverse...</div>
+            } @else {
+              <div class="char-error">!</div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+</div>

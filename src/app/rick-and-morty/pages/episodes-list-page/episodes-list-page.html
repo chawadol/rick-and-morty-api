@@ -1,0 +1,114 @@
+<header>
+  <form (submit)="$event.preventDefault()" (submit)="onSearch()">
+    <fieldset [disabled]="form().disabled()">
+      <input
+        type="text"
+        [formField]="form.name"
+        placeholder="Search episodes..."
+        aria-label="Search"
+      />
+
+      <div class="filter-group">
+        <label>Season</label>
+        <select [formField]="form.episode" (change)="onSearch()">
+          @for (s of seasons; track s.value) {
+            <option [value]="s.value">{{ s.label }}</option>
+          }
+        </select>
+      </div>
+
+      <button type="button" class="clear-btn" (click)="clearSearch()">
+        <i class="material-symbols-outlined">close</i>
+      </button>
+    </fieldset>
+  </form>
+
+  <nav>
+    <div class="pagination-info">
+      @if (resource.hasValue()) {
+        <b>Episodes: </b><span>{{ resource.value().info.count | number }}</span>
+      } @else if (resource.error()) {
+        <span>Error</span>
+      } @else if (resource.isLoading()) {
+        <span>Loading...</span>
+      }
+      <b> | Page : </b><span>{{ currentPage() | number }}</span>
+      @if (resource.hasValue()) {
+        <span> of {{ resource.value().info.pages | number }}</span>
+      }
+    </div>
+  </nav>
+</header>
+
+<div class="content-wrapper">
+  @if (resource.hasValue()) {
+    <app-episodes-list [data]="episodesWithImages()" />
+  } @else if (resource.error()) {
+    <p class="error-msg">{{ errorMessage() }}</p>
+  }
+</div>
+
+@if (resource.hasValue() && pages().length > 0) {
+  <ul class="pagination-list">
+    @if (currentPage() > 10) {
+      <li>
+        <a
+          [routerLink]="[]"
+          [queryParams]="{ page: currentPage() - 10 }"
+          queryParamsHandling="merge"
+          replaceUrl
+          >«</a
+        >
+      </li>
+    }
+
+    <li>
+      <a
+        [routerLink]="previousPage() ? [] : null"
+        [queryParams]="previousPage() === '1' ? { page: null } : { page: previousPage() }"
+        queryParamsHandling="merge"
+        replaceUrl
+      >
+        <i class="material-symbols-outlined">chevron_backward</i>
+      </a>
+    </li>
+
+    @for (p of pages(); track p) {
+      <li>
+        <a
+          [routerLink]="[]"
+          [queryParams]="p === 1 ? { page: null } : { page: p }"
+          queryParamsHandling="merge"
+          replaceUrl
+          [class.active]="p === currentPage()"
+        >
+          {{ p }}
+        </a>
+      </li>
+    }
+
+    <li>
+      <a
+        [routerLink]="nextPage() ? [] : null"
+        [queryParams]="{ page: nextPage() }"
+        queryParamsHandling="merge"
+        replaceUrl
+      >
+        <i class="material-symbols-outlined">chevron_forward</i>
+      </a>
+    </li>
+
+    @let total = resource.value()?.info?.pages ?? 0;
+    @if (pages().length > 0 && pages()[pages().length - 1] < total) {
+      <li>
+        <a
+          [routerLink]="[]"
+          [queryParams]="{ page: Math.min(currentPage() + 10, total) }"
+          queryParamsHandling="merge"
+          replaceUrl
+          >»</a
+        >
+      </li>
+    }
+  </ul>
+}

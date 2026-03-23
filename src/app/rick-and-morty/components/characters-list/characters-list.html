@@ -1,0 +1,33 @@
+@if (data().length > 0) {
+  <div class="cards-grid">
+    @for (item of data(); track item.id) {
+      <div class="card">
+        <a [routerLink]="['/rick-and-morty/characters', item.url | extractId]" class="card-link">
+          <div class="card-image-wrapper">
+            <img [src]="item.image" [alt]="item.name" loading="lazy" />
+          </div>
+
+          <div class="card-content">
+            <div class="section">
+              <h3 class="card-name">{{ item.name }}</h3>
+              <span class="status">
+                <span class="status-icon" [attr.data-status]="item.status | lowercase"></span>
+                {{ item.status }} - {{ item.species }}
+              </span>
+            </div>
+
+            <div class="section">
+              <span class="label">Last known location:</span>
+              <span class="value">{{ item.location.name }}</span>
+            </div>
+
+            <div class="section">
+              <span class="label">First seen in:</span>
+              <span class="value">{{ item.origin.name }}</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    }
+  </div>
+}

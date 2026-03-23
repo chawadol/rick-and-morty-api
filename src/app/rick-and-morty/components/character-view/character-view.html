@@ -1,0 +1,79 @@
+<div class="character-card">
+  <header class="card-header">
+    <div class="image-wrapper">
+      <img [src]="data().image" [alt]="data().name" class="character-img" />
+      <span class="status-badge" [attr.data-status]="data().status | lowercase">
+        {{ data().status }}
+      </span>
+    </div>
+    <h1 class="character-name">{{ data().name }}</h1>
+  </header>
+
+  <div class="card-content">
+    <dl class="info-grid">
+      <div class="info-group">
+        <dt>Species & Gender</dt>
+        <dd>{{ data().species }} ({{ data().gender }})</dd>
+      </div>
+
+      <div class="info-group">
+        <dt>Origin & Dimension</dt>
+        <dd>
+          @if (originResource.isLoading()) {
+            <span class="loading-text">Searching multiverse...</span>
+          } @else if (origin(); as org) {
+            <span class="loc-name"
+              ><strong>{{ org.name }}</strong></span
+            >
+            <span class="dimension-tag">🌌 {{ org.dimension }}</span>
+          } @else {
+            {{ data().origin.name }}
+          }
+        </dd>
+      </div>
+
+      <div class="info-group full-width">
+        <dt>Last Known Location</dt>
+        <dd>
+          @if (locationResource.isLoading()) {
+            <span class="loading-text">Loading location...</span>
+          } @else if (location(); as loc) {
+            <a
+              class="link-btn"
+              [routerLink]="['/rick-and-morty/locations', loc.url ?? '' | extractId]"
+            >
+              📍 {{ loc.name }}
+              <span class="dimension-inline">({{ loc.dimension }})</span>
+            </a>
+          } @else {
+            {{ data().location.name }}
+          }
+        </dd>
+      </div>
+    </dl>
+
+    <section class="episodes-section">
+      <h3>🎬 Appearances ({{ data().episode.length }})</h3>
+      <div class="episode-grid">
+        @for (fieldTree of form.episodes; track fieldTree) {
+          @let resource = fieldTree().metadata(episodeResourceKey)!;
+          <div class="episode-card">
+            @if (resource.hasValue()) {
+              <a
+                [routerLink]="['/rick-and-morty/episodes', resource.value()?.url ?? '' | extractId]"
+                [relativeTo]="moduleRoute()"
+              >
+                <span class="ep-code">{{ resource.value()?.episode }}</span>
+                <span class="ep-name">{{ resource.value()?.name }}</span>
+              </a>
+            } @else if (resource.isLoading()) {
+              <div class="ep-skeleton">Loading...</div>
+            } @else if (resource.error()) {
+              <div class="ep-error">!</div>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  </div>
+</div>

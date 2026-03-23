@@ -1,0 +1,14 @@
+<nav class="back-nav">
+  <button type="button" (click)="goBack()" class="btn-back">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Back
+  </button>
+</nav>
+
+@if (locationWithImage(); as rmlocation) {
+  <app-location-view [data]="rmlocation" [moduleRoute]="moduleRoute"> </app-location-view>
+} @else if (dataResource.error(); as error) {
+  <p class="_error-message">{{ error.message }}</p>
+} @else if (dataResource.isLoading()) {
+  <p class="_loading-text">Loading location details...</p>
+}

@@ -1,0 +1,40 @@
+<nav>
+  <ul>
+    <li routerLinkActive="app-st-active">
+      <a routerLink="characters">Characters</a>
+    </li>
+    <li routerLinkActive="app-st-active">
+      <a routerLink="episodes">Episodes</a>
+    </li>
+    <li routerLinkActive="app-st-active">
+      <a routerLink="locations">Locations</a>
+    </li>
+  </ul>
+</nav>
+
+<router-outlet />
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-section">
+      <p class="copyright">© 2026 <b>Rick and Morty</b> Wiki</p>
+      <p class="dev-by">Developed by <span>Chawadol Ratchanon and Yanisa</span></p>
+    </div>
+
+    <div class="footer-section">
+      <div class="api-status">
+        <span class="status-dot"></span>
+        <p>
+          Data provided by
+          <a href="https://rickandmortyapi.com/" target="_blank">Rick and Morty API</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-section tech-stack">
+      <span>Angular 21 </span>
+      <span>Signals </span>
+      <span>TypeScript </span>
+    </div>
+  </div>
+</footer>

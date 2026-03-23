@@ -1,0 +1,29 @@
+@if (data().length > 0) {
+  <div class="locations-video-grid">
+    @for (item of data(); track item.id) {
+      <div class="video-card">
+        <a [routerLink]="item.url | extractId" class="video-link">
+          <div class="thumbnail-wrapper">
+            <img
+              [src]="item.displayImage"
+              [alt]="item.name"
+              loading="lazy"
+              (error)="$any($event.target).src = 'images/locations/1.jpg'"
+            />
+            <div class="video-badge">{{ item.type }}</div>
+          </div>
+
+          <div class="video-info">
+            <div class="video-text">
+              <h3 class="video-title">{{ item.name }}</h3>
+              <p class="video-meta">{{ item.dimension }}</p>
+              <p class="video-sub-meta">Residents: {{ item.residents.length }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    }
+  </div>
+} @else {
+  <p class="_empty-message">No locations found!!</p>
+}

@@ -1,0 +1,14 @@
+<nav class="back-nav">
+  <button type="button" (click)="goBack()" class="btn-back">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Back
+  </button>
+</nav>
+
+@if (episodeWithImage(); as episode) {
+  <app-episode-view [data]="episode" [moduleRoute]="moduleRoute"> </app-episode-view>
+} @else if (dataResource.error(); as error) {
+  <p class="_error-message">{{ error.message }}</p>
+} @else if (dataResource.isLoading()) {
+  <p class="_loading-text">Loading episode details...</p>
+}

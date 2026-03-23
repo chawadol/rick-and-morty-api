@@ -1,0 +1,28 @@
+@if (data().length > 0) {
+  <div class="episodes-video-grid">
+    @for (item of data(); track item.id) {
+      <div class="video-card">
+        <a [routerLink]="item.url | extractId" class="video-link">
+          <div class="thumbnail-wrapper">
+            <img
+              [src]="item.displayImage"
+              [alt]="item.name"
+              loading="lazy"
+              (error)="$any($event.target).src = 'images/episodes/default.jpg'"
+            />
+            <div class="video-badge">{{ item.episode }}</div>
+          </div>
+
+          <div class="video-info">
+            <div class="video-text">
+              <h3 class="video-title">{{ item.name }}</h3>
+              <p class="video-meta">Rick and Morty • {{ item.air_date }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    }
+  </div>
+} @else {
+  <p class="_empty-message">Not Found!!</p>
+}

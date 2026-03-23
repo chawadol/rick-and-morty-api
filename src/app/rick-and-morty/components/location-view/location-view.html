@@ -1,0 +1,91 @@
+<div class="location-detail-container">
+  <header class="location-header">
+    <div class="location-banner">
+      <img
+        [src]="data().displayImage"
+        [alt]="data().name"
+        class="banner-img"
+        (error)="$any($event.target).src = 'images/locations/1.jpg'"
+      />
+      <div class="banner-overlay"></div>
+    </div>
+    <div class="header-content">
+      <div class="location-icon">
+        @switch (data().type | lowercase) {
+          @case ('planet') {
+            🪐
+          }
+          @case ('space station') {
+            🛰️
+          }
+          @case ('cluster') {
+            🌌
+          }
+          @case ('microverse') {
+            🔬
+          }
+          @default {
+            📍
+          }
+        }
+      </div>
+      <div class="title-group">
+        <h1 class="location-name">{{ data().name }}</h1>
+        <p class="location-type-badge">{{ data().type }}</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="location-content">
+    <dl class="info-grid">
+      <div class="info-group">
+        <dt>Dimension</dt>
+        <dd>🌀 {{ data().dimension || 'Unknown Dimension' }}</dd>
+      </div>
+
+      <div class="info-group">
+        <dt>Residents Count</dt>
+        <dd>👥 {{ data().residents.length }} characters</dd>
+      </div>
+    </dl>
+
+    <section class="residents-section">
+      <h3>👥 Residents</h3>
+
+      @if (data().residents.length > 0) {
+        <div class="residents-grid">
+          @for (fieldTree of form.characters; track fieldTree) {
+            @let resource = fieldTree().metadata(residentResourceKey)!;
+
+            <div class="resident-card">
+              @if (resource.hasValue()) {
+                @let char = resource.value()!;
+                <a
+                  [routerLink]="['/rick-and-morty/characters', char.url | extractId]"
+                  [relativeTo]="moduleRoute()"
+                  class="resident-link"
+                >
+                  <img [src]="char.image" [alt]="char.name" class="resident-thumb" />
+                  <div class="resident-info">
+                    <span class="res-name">{{ char.name }}</span>
+                    <span class="res-status" [attr.data-status]="char.status | lowercase">
+                      ● {{ char.status }}
+                    </span>
+                  </div>
+                </a>
+              } @else if (resource.isLoading()) {
+                <div class="res-placeholder loading">Searching...</div>
+              } @else {
+                <div class="res-placeholder error">!</div>
+              }
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p class="empty-residents">This location is currently deserted.</p>
+        </div>
+      }
+    </section>
+  </div>
+</div>
